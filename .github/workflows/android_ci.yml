@@ -25,8 +25,6 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew assembleGenericRelease
-      - name: List APKs
-        run: find app/build/outputs | head -40
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
