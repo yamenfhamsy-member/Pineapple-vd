@@ -5,7 +5,6 @@ import androidx.annotation.DeprecatedSinceApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.google.android.material.color.DynamicColors
 import com.junkfood.seal.App
 import com.junkfood.seal.App.Companion.applicationScope
 import com.junkfood.seal.App.Companion.context
@@ -380,8 +379,7 @@ object PreferenceUtil {
                         kv.decodeInt(DARK_THEME_VALUE, DarkThemePreference.FOLLOW_SYSTEM),
                     isHighContrastModeEnabled = kv.decodeBool(HIGH_CONTRAST, false),
                 ),
-                isDynamicColorEnabled =
-                    kv.decodeBool(DYNAMIC_COLOR, DynamicColors.isDynamicColorAvailable()),
+                isDynamicColorEnabled = kv.decodeBool(DYNAMIC_COLOR, false),
                 seedColor = kv.decodeInt(THEME_COLOR, DEFAULT_SEED_COLOR),
                 paletteStyleIndex = kv.decodeInt(PALETTE_STYLE, 0),
             )

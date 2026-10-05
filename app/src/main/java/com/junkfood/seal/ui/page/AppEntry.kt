@@ -46,7 +46,6 @@ import com.junkfood.seal.ui.page.command.TaskLogPage
 import com.junkfood.seal.ui.page.downloadv2.configure.DownloadDialogViewModel
 import com.junkfood.seal.ui.page.downloadv2.DownloadPageV2
 import com.junkfood.seal.ui.page.settings.SettingsPage
-import com.junkfood.seal.ui.page.settings.appearance.AppearancePreferences
 import com.junkfood.seal.ui.page.settings.appearance.DarkThemePreferences
 import com.junkfood.seal.ui.page.settings.appearance.LanguagePage
 import com.junkfood.seal.ui.page.settings.command.TemplateEditPage
@@ -206,9 +205,6 @@ fun NavGraphBuilder.settingsGraph(
             }
         }
         animatedComposable(Route.SUBTITLE_PREFERENCES) { SubtitlePreference { onNavigateBack() } }
-        animatedComposable(Route.APPEARANCE) {
-            AppearancePreferences(onNavigateBack = onNavigateBack, onNavigateTo = onNavigateTo)
-        }
         animatedComposable(Route.INTERACTION) { InteractionPreferencePage(onBack = onNavigateBack) }
         animatedComposable(Route.LANGUAGES) { LanguagePage { onNavigateBack() } }
         animatedComposable(Route.DOWNLOAD_DIRECTORY) {

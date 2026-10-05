@@ -24,7 +24,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build unsigned release APKs
-      run: ./gradlew assembleGenericRelease
+      run: ./gradlew assembleGenericRelease -PnoSplits
 
     - name: Sign app APK
       id: sign_app

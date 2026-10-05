@@ -16,11 +16,13 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.rounded.AudioFile
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.EnergySavingsLeaf
 import androidx.compose.material.icons.rounded.Folder
-import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.SettingsApplications
 import androidx.compose.material.icons.rounded.SignalCellular4Bar
 import androidx.compose.material.icons.rounded.SignalWifi4Bar
@@ -45,12 +47,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.junkfood.seal.App
 import com.junkfood.seal.R
+import com.junkfood.seal.ui.common.LocalDarkTheme
 import com.junkfood.seal.ui.common.Route
 import com.junkfood.seal.ui.component.BackButton
 import com.junkfood.seal.ui.component.PreferencesHintCard
 import com.junkfood.seal.ui.component.SettingItem
 import com.junkfood.seal.util.EXTRACT_AUDIO
 import com.junkfood.seal.util.PreferenceUtil.getBoolean
+import com.junkfood.seal.util.toDisplayName
+import java.util.Locale
 
 @SuppressLint("BatteryLife")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -185,12 +190,22 @@ fun SettingsPage(onNavigateBack: () -> Unit, onNavigateTo: (String) -> Unit) {
                 }
             }
             item {
+                val isDarkTheme = LocalDarkTheme.current.isDarkTheme()
                 SettingItem(
-                    title = stringResource(id = R.string.look_and_feel),
-                    description = stringResource(id = R.string.display_settings),
-                    icon = Icons.Rounded.Palette,
+                    title = stringResource(id = R.string.dark_theme),
+                    description = LocalDarkTheme.current.getDarkThemeDesc(),
+                    icon = if (isDarkTheme) Icons.Outlined.DarkMode else Icons.Outlined.LightMode,
                 ) {
-                    onNavigateTo(Route.APPEARANCE)
+                    onNavigateTo(Route.DARK_THEME)
+                }
+            }
+            item {
+                SettingItem(
+                    title = stringResource(R.string.language),
+                    description = Locale.getDefault().toDisplayName(),
+                    icon = Icons.Outlined.Language,
+                ) {
+                    onNavigateTo(Route.LANGUAGES)
                 }
             }
             item {
