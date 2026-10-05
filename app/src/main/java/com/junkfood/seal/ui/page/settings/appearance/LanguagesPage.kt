@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,8 +46,6 @@ import com.junkfood.seal.R
 import com.junkfood.seal.ui.component.BackButton
 import com.junkfood.seal.ui.component.PreferenceSingleChoiceItem
 import com.junkfood.seal.ui.component.PreferenceSubtitle
-import com.junkfood.seal.ui.component.PreferencesHintCard
-import com.junkfood.seal.ui.page.settings.about.weblate
 import com.junkfood.seal.ui.theme.SealTheme
 import com.junkfood.seal.util.LocaleLanguageCodeMap
 import com.junkfood.seal.util.PreferenceUtil
@@ -150,7 +147,6 @@ private fun LanguagePageImpl(
             rememberTopAppBarState(),
             canScroll = { true },
         )
-    val uriHandler = LocalUriHandler.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -165,16 +161,6 @@ private fun LanguagePageImpl(
         },
         content = {
             LazyColumn(modifier = Modifier, contentPadding = it) {
-                item {
-                    PreferencesHintCard(
-                        title = stringResource(R.string.translate),
-                        description = stringResource(R.string.translate_desc),
-                        icon = Icons.Outlined.Translate,
-                    ) {
-                        uriHandler.openUri(weblate)
-                    }
-                }
-
                 if (suggestedLocales.isNotEmpty()) {
 
                     item { PreferenceSubtitle(text = stringResource(id = R.string.suggested)) }

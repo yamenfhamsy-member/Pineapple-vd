@@ -46,10 +46,6 @@ import com.junkfood.seal.ui.page.command.TaskLogPage
 import com.junkfood.seal.ui.page.downloadv2.configure.DownloadDialogViewModel
 import com.junkfood.seal.ui.page.downloadv2.DownloadPageV2
 import com.junkfood.seal.ui.page.settings.SettingsPage
-import com.junkfood.seal.ui.page.settings.about.AboutPage
-import com.junkfood.seal.ui.page.settings.about.CreditsPage
-import com.junkfood.seal.ui.page.settings.about.SponsorsPage
-import com.junkfood.seal.ui.page.settings.about.UpdatePage
 import com.junkfood.seal.ui.page.settings.appearance.AppearancePreferences
 import com.junkfood.seal.ui.page.settings.appearance.DarkThemePreferences
 import com.junkfood.seal.ui.page.settings.appearance.LanguagePage
@@ -131,7 +127,11 @@ fun AppEntry(dialogViewModel: DownloadDialogViewModel) {
             },
             footer = {
                 Text(
-                    appName + "\n" + versionReport + "\n" + currentRoute,
+                    appName +
+                        "\n" +
+                        versionReport +
+                        "\n" +
+                        stringResource(R.string.developed_by),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(start = 12.dp),
@@ -178,7 +178,6 @@ fun AppEntry(dialogViewModel: DownloadDialogViewModel) {
                 )
             }
 
-            AppUpdater()
             YtdlpUpdater()
         }
     }
@@ -207,17 +206,6 @@ fun NavGraphBuilder.settingsGraph(
             }
         }
         animatedComposable(Route.SUBTITLE_PREFERENCES) { SubtitlePreference { onNavigateBack() } }
-        animatedComposable(Route.ABOUT) {
-            AboutPage(
-                onNavigateBack = onNavigateBack,
-                onNavigateToCreditsPage = { onNavigateTo(Route.CREDITS) },
-                onNavigateToUpdatePage = { onNavigateTo(Route.AUTO_UPDATE) },
-                onNavigateToDonatePage = { onNavigateTo(Route.DONATE) },
-            )
-        }
-        animatedComposable(Route.DONATE) { SponsorsPage(onNavigateBack) }
-        animatedComposable(Route.CREDITS) { CreditsPage(onNavigateBack) }
-        animatedComposable(Route.AUTO_UPDATE) { UpdatePage(onNavigateBack) }
         animatedComposable(Route.APPEARANCE) {
             AppearancePreferences(onNavigateBack = onNavigateBack, onNavigateTo = onNavigateTo)
         }

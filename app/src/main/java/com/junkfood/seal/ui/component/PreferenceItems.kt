@@ -692,41 +692,6 @@ fun PreferenceSwitchWithContainer(
     }
 }
 
-@Composable
-fun CreditItem(
-    title: String,
-    license: String? = null,
-    enabled: Boolean = true,
-    onClick: () -> Unit = {},
-) {
-    Surface(modifier = Modifier.clickable { onClick() }) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.weight(1f).padding(horizontal = 10.dp)) {
-                with(MaterialTheme) {
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        style = typography.titleMedium,
-                        color = colorScheme.onSurface.applyOpacity(enabled),
-                    )
-                    license?.let {
-                        Text(
-                            text = it,
-                            color = colorScheme.onSurfaceVariant.applyOpacity(enabled),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            style = typography.bodyMedium,
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Preview

@@ -76,7 +76,6 @@ import com.junkfood.seal.ui.component.HelpDialog
 import com.junkfood.seal.ui.component.PreferenceItemVariant
 import com.junkfood.seal.ui.component.PreferenceSwitchWithContainer
 import com.junkfood.seal.ui.component.TemplateItem
-import com.junkfood.seal.ui.page.settings.about.YtdlpRepository
 import com.junkfood.seal.util.CUSTOM_COMMAND
 import com.junkfood.seal.util.DatabaseUtil
 import com.junkfood.seal.util.PreferenceUtil
@@ -88,6 +87,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val TAG = "TemplateListPage"
+private const val YtdlpRepository = "https://github.com/yt-dlp/yt-dlp"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

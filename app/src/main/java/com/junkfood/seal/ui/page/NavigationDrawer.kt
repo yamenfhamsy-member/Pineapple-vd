@@ -26,11 +26,9 @@ import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Subscriptions
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material.icons.outlined.VolunteerActivism
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Cookie
 import androidx.compose.material.icons.rounded.Folder
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.SettingsApplications
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -216,17 +214,6 @@ fun NavigationDrawerSheetContent(
                 selected = currentRoute == Route.SETTINGS_PAGE,
             )
 
-            NavigationDrawerItem(
-                label = { Text(stringResource(R.string.sponsor)) },
-                icon = { Icon(Icons.Outlined.VolunteerActivism, null) },
-                onClick = {
-                    scope
-                        .launch { onDismissRequest() }
-                        .invokeOnCompletion { onNavigateToRoute(Route.DONATE) }
-                },
-                selected = currentRoute == Route.DONATE,
-            )
-
             if (showQuickSettings) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
@@ -277,27 +264,16 @@ fun NavigationDrawerSheetContent(
                     selected = currentRoute == Route.COOKIE_PROFILE,
                 )
 
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.trouble_shooting)) },
-                    icon = { Icon(Icons.Rounded.BugReport, null) },
-                    onClick = {
-                        scope
-                            .launch { onDismissRequest() }
-                            .invokeOnCompletion { onNavigateToRoute(Route.TROUBLESHOOTING) }
-                    },
-                    selected = currentRoute == Route.TROUBLESHOOTING,
-                )
-
-                NavigationDrawerItem(
-                    label = { Text(stringResource(R.string.about)) },
-                    icon = { Icon(Icons.Rounded.Info, null) },
-                    onClick = {
-                        scope
-                            .launch { onDismissRequest() }
-                            .invokeOnCompletion { onNavigateToRoute(Route.ABOUT) }
-                    },
-                    selected = currentRoute == Route.ABOUT,
-                )
+            NavigationDrawerItem(
+                label = { Text(stringResource(R.string.trouble_shooting)) },
+                icon = { Icon(Icons.Rounded.BugReport, null) },
+                onClick = {
+                    scope
+                        .launch { onDismissRequest() }
+                        .invokeOnCompletion { onNavigateToRoute(Route.TROUBLESHOOTING) }
+                },
+                selected = currentRoute == Route.TROUBLESHOOTING,
+            )
             }
         }
         Spacer(Modifier.weight(1f))

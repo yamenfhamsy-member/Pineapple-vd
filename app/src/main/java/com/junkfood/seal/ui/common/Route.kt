@@ -15,9 +15,7 @@ object Route {
     const val APPEARANCE = "appearance"
     const val INTERACTION = "interaction"
     const val GENERAL_DOWNLOAD_PREFERENCES = "general_download_preferences"
-    const val ABOUT = "about"
     const val DOWNLOAD_DIRECTORY = "download_directory"
-    const val CREDITS = "credits"
     const val LANGUAGES = "languages"
     const val TEMPLATE = "template"
     const val TEMPLATE_EDIT = "template_edit"
@@ -28,8 +26,6 @@ object Route {
     const val COOKIE_PROFILE = "cookie_profile"
     const val COOKIE_GENERATOR_WEBVIEW = "cookie_webview"
     const val SUBTITLE_PREFERENCES = "subtitle_preferences"
-    const val AUTO_UPDATE = "auto_update"
-    const val DONATE = "donate"
     const val TROUBLESHOOTING = "troubleshooting"
 
     const val TASK_HASHCODE = "task_hashcode"
