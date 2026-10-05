@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextDirection
 import com.google.android.material.color.MaterialColors
+import com.junkfood.seal.ui.common.LocalDynamicColorSwitch
 import com.junkfood.seal.ui.common.LocalFixedColorRoles
 import com.kyant.monet.LocalTonalPalettes
 import com.kyant.monet.dynamicColorScheme
@@ -58,7 +59,14 @@ fun SealTheme(
     }
 
     val colorScheme =
-        dynamicColorScheme(!darkTheme).run {
+        (if (LocalDynamicColorSwitch.current) {
+                dynamicColorScheme(!darkTheme)
+            } else if (darkTheme) {
+                vinlandDarkColorScheme()
+            } else {
+                vinlandLightColorScheme()
+            })
+            .run {
             if (isHighContrastModeEnabled && darkTheme)
                 copy(
                     surface = Color.Black,

@@ -149,7 +149,7 @@ enum class TaskStatus {
     FINISHED,
 }
 
-val GreenTonalPalettes = Color(0xFF328934).toTonalPalettes()
+val GreenTonalPalettes = Color(0xFF5BA87B).toTonalPalettes()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

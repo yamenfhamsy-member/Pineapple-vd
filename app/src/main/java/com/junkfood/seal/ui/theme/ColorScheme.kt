@@ -156,7 +156,7 @@ data class FixedColorRoles(
     }
 }
 
-const val DEFAULT_SEED_COLOR = 0xF0A008
+const val DEFAULT_SEED_COLOR = 0xC89B53
 
 /**
  * @return a [Color] generated using [Hct] algorithm, harmonized with `primary` color
@@ -178,4 +178,4 @@ fun Int.generateOnLabelColor(): Color =
     Color(Hct.from(hue = (this % 360).toDouble(), chroma = 36.0, tone = 20.0).toInt())
         .harmonizeWithPrimary()
 
-val ErrorTonalPalettes = Color.Red.toTonalPalettes()
+val ErrorTonalPalettes = Color(0xFFBF222B).toTonalPalettes()
