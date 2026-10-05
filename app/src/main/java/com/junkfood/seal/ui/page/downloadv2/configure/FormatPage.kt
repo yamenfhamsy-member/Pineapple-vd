@@ -33,23 +33,23 @@ import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.MusicNote
+import androidx.compose.material.icons.outlined.SmartDisplay
 import androidx.compose.material.icons.outlined.Subtitles
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RangeSliderState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -64,7 +64,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
@@ -73,10 +73,10 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.junkfood.seal.R
 import com.junkfood.seal.download.DownloaderV2
 import com.junkfood.seal.download.TaskFactory
+import com.junkfood.seal.ui.common.AsyncImageImpl
 import com.junkfood.seal.ui.component.ClearButton
 import com.junkfood.seal.ui.component.ConfirmButton
 import com.junkfood.seal.ui.component.DismissButton
@@ -106,6 +106,7 @@ import com.junkfood.seal.util.SubtitleFormat
 import com.junkfood.seal.util.VIDEO_CLIP
 import com.junkfood.seal.util.VideoClip
 import com.junkfood.seal.util.VideoInfo
+import com.junkfood.seal.util.toFileSizeText
 import com.junkfood.seal.util.toHttpsUrl
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -292,8 +293,6 @@ private fun FormatPageImpl(
     onNavigateBack: () -> Unit = {},
     onDownloadPressed: (FormatConfig) -> Unit = { _ -> },
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
     if (videoInfo.formats.isNullOrEmpty()) return
     val videoOnlyFormats =
         videoInfo.formats.filter { it.vcodec != "none" && it.acodec == "none" }.reversed()
@@ -382,64 +381,135 @@ private fun FormatPageImpl(
         }
     }
 
-    val isFabExpanded by remember { derivedStateOf { lazyGridState.firstVisibleItemIndex > 0 } }
-
     val selectedSubtitles = remember {
         mutableStateListOf<String>().apply { addAll(selectedSubtitleCodes) }
     }
 
     val selectedAutoCaptions = remember { mutableStateListOf<String>() }
 
+    var showAllFormats by remember { mutableStateOf(false) }
+    val quickAudioFormats = audioOnlyFormats.take(2)
+    val quickVideoIsProgressive = videoAudioFormats.isNotEmpty()
+    val quickVideoFormats =
+        (if (quickVideoIsProgressive) videoAudioFormats else videoOnlyFormats).take(2)
+
+    fun selectQuickAudio(index: Int) {
+        isSuggestedFormatSelected = false
+        selectedVideoAudioFormat = NOT_SELECTED
+        selectedVideoOnlyFormat = NOT_SELECTED
+        selectedAudioOnlyFormats.clear()
+        selectedAudioOnlyFormats.add(index)
+    }
+
+    fun toggleQuickAudio(index: Int) {
+        val isSingle =
+            !isSuggestedFormatSelected &&
+                selectedVideoAudioFormat == NOT_SELECTED &&
+                selectedVideoOnlyFormat == NOT_SELECTED &&
+                selectedAudioOnlyFormats.toList() == listOf(index)
+        if (isSingle) {
+            selectedAudioOnlyFormats.clear()
+        } else {
+            selectQuickAudio(index)
+        }
+    }
+
+    fun selectQuickVideo(index: Int) {
+        isSuggestedFormatSelected = false
+        selectedAudioOnlyFormats.clear()
+        selectedVideoAudioFormat = NOT_SELECTED
+        selectedVideoOnlyFormat = NOT_SELECTED
+        if (quickVideoIsProgressive) {
+            selectedVideoAudioFormat = index
+        } else {
+            selectedVideoOnlyFormat = index
+            if (audioOnlyFormats.isNotEmpty()) selectedAudioOnlyFormats.add(0)
+        }
+    }
+
+    fun toggleQuickVideo(index: Int) {
+        val isSingle =
+            !isSuggestedFormatSelected &&
+                if (quickVideoIsProgressive) {
+                    selectedVideoAudioFormat == index && selectedAudioOnlyFormats.isEmpty()
+                } else {
+                    selectedVideoOnlyFormat == index &&
+                        selectedVideoAudioFormat == NOT_SELECTED
+                }
+        if (isSingle) {
+            selectedVideoAudioFormat = NOT_SELECTED
+            selectedVideoOnlyFormat = NOT_SELECTED
+            selectedAudioOnlyFormats.clear()
+        } else {
+            selectQuickVideo(index)
+        }
+    }
+
+    fun Format.resolutionText(): String =
+        height?.roundToInt()?.let { "${it}p" } ?: resolution ?: formatNote ?: ""
+
     Scaffold(
-        modifier = modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.format_selection),
-                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
+            Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier =
+                            Modifier.size(width = 40.dp, height = 4.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                                    RoundedCornerShape(50),
+                                )
                     )
-                },
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     IconButton(onClick = { onNavigateBack() }) {
                         Icon(Icons.Outlined.Close, stringResource(R.string.close))
                     }
-                },
-            )
+                    Text(
+                        text = stringResource(R.string.copied_video),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.size(48.dp))
+                }
+            }
         },
-        floatingActionButton = {
+        bottomBar = {
             val isFormatSelected = isSuggestedFormatSelected || formatList.isNotEmpty()
-            if (isFormatSelected) {
-                ExtendedFloatingActionButton(
-                    onClick = {
-                        onDownloadPressed(
-                            FormatConfig(
-                                formatList = formatList,
-                                videoClips =
-                                    if (isClippingVideo) listOf(VideoClip(videoClipDuration))
-                                    else emptyList(),
-                                splitByChapter = isSplittingVideo,
-                                newTitle = videoTitle,
-                                selectedSubtitles = selectedSubtitles,
-                                selectedAutoCaptions = selectedAutoCaptions,
-                            )
+            Button(
+                onClick = {
+                    onDownloadPressed(
+                        FormatConfig(
+                            formatList = formatList,
+                            videoClips =
+                                if (isClippingVideo) listOf(VideoClip(videoClipDuration))
+                                else emptyList(),
+                            splitByChapter = isSplittingVideo,
+                            newTitle = videoTitle,
+                            selectedSubtitles = selectedSubtitles,
+                            selectedAutoCaptions = selectedAutoCaptions,
                         )
-                    },
-                    modifier = Modifier.padding(12.dp),
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.FileDownload,
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                        )
-                    },
-                    text = { Text(stringResource(R.string.start_download)) },
-                    expanded = isFabExpanded,
+                    )
+                },
+                enabled = isFormatSelected,
+                shape = RoundedCornerShape(28.dp),
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 16.dp)
+                        .height(52.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.start_download),
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End,
     ) { paddingValues ->
         LazyVerticalGrid(
             modifier = Modifier.padding(paddingValues),
@@ -449,6 +519,70 @@ private fun FormatPageImpl(
             columns = GridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(8.dp),
         ) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                SnapVideoHeader(videoInfo = videoInfo)
+                if (audioOnlyFormats.isNotEmpty()) {
+                    SnapSectionTitle(text = stringResource(R.string.music))
+                    quickAudioFormats.forEachIndexed { quickIndex, format ->
+                        val selected =
+                            !isSuggestedFormatSelected &&
+                                selectedVideoAudioFormat == NOT_SELECTED &&
+                                selectedVideoOnlyFormat == NOT_SELECTED &&
+                                selectedAudioOnlyFormats.toList() == listOf(quickIndex)
+                        SnapFormatRow(
+                            label =
+                                if (quickIndex == 0) stringResource(R.string.fast)
+                                else
+                                    stringResource(
+                                        R.string.classic_format,
+                                        format.ext?.uppercase() ?: "",
+                                    ),
+                            sizeText =
+                                (format.fileSize ?: format.fileSizeApprox).toFileSizeText(),
+                            icon = Icons.Outlined.MusicNote,
+                            selected = selected,
+                            onClick = { toggleQuickAudio(quickIndex) },
+                        )
+                    }
+                }
+                if (!audioOnly && quickVideoFormats.isNotEmpty()) {
+                    SnapSectionTitle(text = stringResource(R.string.video))
+                    quickVideoFormats.forEachIndexed { quickIndex, format ->
+                        val selected =
+                            !isSuggestedFormatSelected &&
+                                if (quickVideoIsProgressive) {
+                                    selectedVideoAudioFormat == quickIndex &&
+                                        selectedAudioOnlyFormats.isEmpty()
+                                } else {
+                                    selectedVideoOnlyFormat == quickIndex &&
+                                        selectedVideoAudioFormat == NOT_SELECTED
+                                }
+                        SnapFormatRow(
+                            label =
+                                if (quickIndex == 0)
+                                    stringResource(
+                                        R.string.fast_format,
+                                        format.resolutionText(),
+                                    )
+                                else
+                                    stringResource(
+                                        R.string.high_quality_format,
+                                        format.resolutionText(),
+                                    ),
+                            sizeText =
+                                (format.fileSize ?: format.fileSizeApprox).toFileSizeText(),
+                            icon = Icons.Outlined.SmartDisplay,
+                            selected = selected,
+                            onClick = { toggleQuickVideo(quickIndex) },
+                        )
+                    }
+                }
+                SnapMoreFormatsRow(
+                    expanded = showAllFormats,
+                    onClick = { showAllFormats = !showAllFormats },
+                )
+            }
+            if (showAllFormats) {
             videoInfo.run {
                 item(span = { GridItemSpan(maxLineSpan) }) {
                     FormatVideoPreview(
@@ -740,15 +874,16 @@ private fun FormatPageImpl(
                 }
             }
 
-            if (!audioOnly && audioOnlyFormats.isNotEmpty() && videoOnlyFormats.isNotEmpty())
-                item(span = { GridItemSpan(maxLineSpan) }) {
-                    PreferenceInfo(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
-                        text = stringResource(R.string.abs_hint),
-                        applyPaddings = false,
-                    )
-                }
-            item { Spacer(modifier = Modifier.height(64.dp)) }
+                if (!audioOnly && audioOnlyFormats.isNotEmpty() && videoOnlyFormats.isNotEmpty())
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        PreferenceInfo(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+                            text = stringResource(R.string.abs_hint),
+                            applyPaddings = false,
+                        )
+                    }
+            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
         }
     }
     if (showVideoClipDialog)
@@ -781,6 +916,137 @@ private fun FormatPageImpl(
                 showSubtitleSelectionDialog = false
             },
         )
+}
+
+@Composable
+private fun SnapVideoHeader(videoInfo: VideoInfo, modifier: Modifier = Modifier) {
+    val site =
+        videoInfo.extractor?.replaceFirstChar { it.uppercase() }
+            ?: videoInfo.uploader
+            ?: videoInfo.channel
+            ?: ""
+    val domain =
+        videoInfo.webpageUrlDomain
+            ?: videoInfo.webpageUrl?.let { android.net.Uri.parse(it).host }
+            ?: ""
+    Row(
+        modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        AsyncImageImpl(
+            model = videoInfo.thumbnail.toHttpsUrl(),
+            contentDescription = null,
+            modifier =
+                Modifier.size(width = 112.dp, height = 72.dp).clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop,
+        )
+        Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
+            if (site.isNotBlank()) {
+                Text(
+                    text = site,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            if (videoInfo.id.isNotBlank()) {
+                Text(
+                    text = videoInfo.id,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            if (domain.isNotBlank()) {
+                Text(
+                    text = domain,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SnapSectionTitle(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 12.dp),
+    )
+}
+
+@Composable
+private fun SnapFormatRow(
+    label: String,
+    sizeText: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 20.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(24.dp),
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f).padding(horizontal = 12.dp),
+        )
+        Text(
+            text = sizeText,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        RadioButton(selected = selected, onClick = null)
+    }
+}
+
+@Composable
+private fun SnapMoreFormatsRow(
+    expanded: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.more_formats),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            text = stringResource(R.string.all),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Icon(
+            imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
 }
 
 @Composable

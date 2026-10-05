@@ -451,4 +451,11 @@
     <string name="issue_tracker">متتبع المشكلة</string>
     <string name="issue_tracker_hint">هل واجهت خطًأ؟ قبل الإبلاغ عن مشكلة جديدة، يرجى البحث في أداة تتبع المشاكل لدينا. لقد عولجت العديد من المشاكل الشائعة وتوثيقها بالفعل هناك.</string>
     <string name="media_info">معلومات الوسائط</string>
+    <string name="copied_video">لقد قمت بنسخ فيديو</string>
+    <string name="music">موسيقى</string>
+    <string name="more_formats">المزيد من الصيغ</string>
+    <string name="fast">سريع</string>
+    <string name="classic_format">كلاسيكي %1$s</string>
+    <string name="fast_format">سريع (%1$s)</string>
+    <string name="high_quality_format">جودة عالية (%1$s)</string>
 </resources>
