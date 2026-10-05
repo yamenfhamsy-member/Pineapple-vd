@@ -561,7 +561,7 @@ fun PreferencesCautionCard(
 @Preview
 @Composable
 fun PreferencesHintCardPreview() {
-    CompositionLocalProvider(LocalTonalPalettes provides Color(0xFF5BA87B).toTonalPalettes()) {
+    CompositionLocalProvider(LocalTonalPalettes provides Color(0xFF328934).toTonalPalettes()) {
         PreferencesHintCard(
             title = "Explore new features",
             icon = Icons.Outlined.TipsAndUpdates,
