@@ -1,6 +1,7 @@
 package com.junkfood.seal.ui.page.settings.about
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.ClickableText
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.junkfood.seal.App
 import com.junkfood.seal.App.Companion.packageInfo
 import com.junkfood.seal.R
@@ -203,6 +205,15 @@ fun AboutPage(
                         clipboardManager.setText(AnnotatedString(context.packageName))
                         ToastUtil.makeToast(R.string.info_copied)
                     }
+                }
+                item {
+                    Text(
+                        text = stringResource(R.string.developed_by),
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
         },

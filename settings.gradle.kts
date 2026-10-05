@@ -16,6 +16,6 @@ dependencyResolutionManagement {
         mavenLocal()
     }
 }
-rootProject.name = "Seal"
+rootProject.name = "Pineapple vd"
 include (":app")
 include(":color")

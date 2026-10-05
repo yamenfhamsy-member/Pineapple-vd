@@ -3,6 +3,7 @@ name: Android CI
 on:
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,3 +28,10 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew buildGenericRelease
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PineappleVD-apks
+          path: app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 20

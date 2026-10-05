@@ -85,7 +85,12 @@ import java.util.Locale
 import kotlinx.coroutines.Job
 
 private val ColorList =
-    ((4..10) + (1..3)).map { it * 35.0 }.map { Color(Hct.from(it, 40.0, 40.0).toInt()) }
+    listOf(
+        Color(0xF0A008),
+        Color(0x328934),
+        Color(0x298E5A),
+        Color(0xEA7903),
+    ) + ((4..10) + (1..3)).map { it * 35.0 }.map { Color(Hct.from(it, 40.0, 40.0).toInt()) }
 
 private val DrawableList =
     listOf(R.drawable.sample, R.drawable.sample1, R.drawable.sample2, R.drawable.sample3)
@@ -235,7 +240,7 @@ fun RowScope.ColorButtons(color: Color) {
 @Composable
 fun RowScope.ColorButton(
     modifier: Modifier = Modifier,
-    color: Color = Color.Green,
+    color: Color = Color(0xFF328934),
     index: Int = 0,
     tonalStyle: PaletteStyle = PaletteStyle.TonalSpot,
 ) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Seal</string>
+    <string name="app_name" translatable="false">Pineapple vd</string>
     <string name="video_directory">Video folder</string>
     <string name="extract_audio">Save as audio</string>
     <string name="create_thumbnail">Save thumbnail</string>
@@ -49,6 +49,7 @@
     <string name="checked">Checked</string>
     <string name="credits">Credits</string>
     <string name="credits_desc">Credits and libre software</string>
+    <string name="developed_by" translatable="false">تم التطوير بواسطة فريق Pineapple AI</string>
     <string name="custom_command">Custom command</string>
     <string name="custom_command_desc">Run yt-dlp command with custom template</string>
     <string name="custom_command_template">Command template</string>
