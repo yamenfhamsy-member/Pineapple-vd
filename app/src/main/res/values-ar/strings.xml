@@ -443,6 +443,8 @@
     <string name="all">الجميع</string>
     <string name="select_multiple_link">اختر من %1$d رابطًا</string>
     <string name="download_queue">قائمة انتظار التنزيل</string>
+    <string name="quick_input_hint">الصق رابط الفيديو هنا…</string>
+    <string name="quick_input_download">جلب الفيديو</string>
     <string name="show_navigation_drawer">إظهار درج التنقل</string>
     <string name="resume">استمرار</string>
     <string name="delete">حذف</string>

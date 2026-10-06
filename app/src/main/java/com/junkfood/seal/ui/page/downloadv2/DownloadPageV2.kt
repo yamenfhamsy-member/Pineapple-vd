@@ -213,6 +213,10 @@ fun DownloadPageV2(
             view.slightHapticFeedback()
             dialogViewModel.postAction(Action.ShowSheet())
         },
+        onQuickDownload = { url ->
+            view.slightHapticFeedback()
+            dialogViewModel.postAction(Action.ShowSheet(listOf(url)))
+        },
         onMenuOpen = onMenuOpen,
     ) { task, action ->
         view.slightHapticFeedback()
@@ -318,6 +322,7 @@ fun DownloadPageImplV2(
     modifier: Modifier = Modifier,
     taskDownloadStateMap: SnapshotStateMap<Task, Task.State>,
     downloadCallback: () -> Unit = {},
+    onQuickDownload: (String) -> Unit = {},
     onMenuOpen: (() -> Unit) = {},
     onActionPost: (Task, UiAction) -> Unit,
 ) {
@@ -423,6 +428,10 @@ fun DownloadPageImplV2(
                     if (headerOffset <= 0.1f && spacerHeight > 0f) {
                         HorizontalDivider(thickness = Dp.Hairline)
                     }
+                    QuickInputStation(
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp),
+                        onSubmit = onQuickDownload,
+                    )
                 }
 
                 LazyVerticalGrid(
@@ -457,27 +466,13 @@ fun DownloadPageImplV2(
                                 filteredMap.toList().sortedBy { (_, state) -> state.downloadState },
                             key = { (task, _) -> task.id },
                         ) { (task, state) ->
-                            with(state.viewState) {
-                                VideoCardV2(
-                                    modifier = Modifier.padding(bottom = 20.dp).padding(),
-                                    viewState = this,
-                                    actionButton = {
-                                        ActionButton(
-                                            modifier = Modifier,
-                                            downloadState = state.downloadState,
-                                        ) {
-                                            onActionPost(task, it)
-                                        }
-                                    },
-                                    stateIndicator = {
-                                        CardStateIndicator(
-                                            modifier = Modifier,
-                                            downloadState = state.downloadState,
-                                        )
-                                    },
-                                    onButtonClick = { showActionSheet(task) },
-                                )
-                            }
+                            BentoTaskRow(
+                                modifier = Modifier.padding(bottom = 12.dp),
+                                viewState = state.viewState,
+                                downloadState = state.downloadState,
+                                onActionPost = { onActionPost(task, it) },
+                                onButtonClick = { showActionSheet(task) },
+                            )
                         }
                     } else {
                         items(
@@ -486,15 +481,11 @@ fun DownloadPageImplV2(
                             key = { (task, _) -> task.id },
                             span = { GridItemSpan(maxLineSpan) },
                         ) { (task, state) ->
-                            VideoListItem(
-                                modifier = Modifier.padding(bottom = 16.dp),
+                            BentoTaskRow(
+                                modifier = Modifier.padding(bottom = 12.dp),
                                 viewState = state.viewState,
-                                stateIndicator = {
-                                    ListItemStateText(
-                                        modifier = Modifier.padding(top = 3.dp),
-                                        downloadState = state.downloadState,
-                                    )
-                                },
+                                downloadState = state.downloadState,
+                                onActionPost = { onActionPost(task, it) },
                                 onButtonClick = { showActionSheet(task) },
                             )
                         }

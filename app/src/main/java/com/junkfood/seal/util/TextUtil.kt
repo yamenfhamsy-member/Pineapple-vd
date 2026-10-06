@@ -10,6 +10,7 @@ import com.junkfood.seal.App
 import com.junkfood.seal.App.Companion.applicationScope
 import com.junkfood.seal.App.Companion.context
 import com.junkfood.seal.R
+import java.util.Locale
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
@@ -49,16 +50,18 @@ fun Number?.toFileSizeText(): String {
     if (this == null) return stringResource(id = R.string.unknown)
 
     return this.toFloat().run {
-        if (this > GIGA_BYTES) stringResource(R.string.filesize_gb).format(this / GIGA_BYTES)
-        else stringResource(R.string.filesize_mb).format(this / MEGA_BYTES)
+        if (this > GIGA_BYTES)
+            stringResource(R.string.filesize_gb).format(Locale.US, this / GIGA_BYTES)
+        else stringResource(R.string.filesize_mb).format(Locale.US, this / MEGA_BYTES)
     }
 }
 
 /** Convert time in **seconds** to `hh:mm:ss` or `mm:ss` */
 fun Int.toDurationText(): String =
     this.run {
-        if (this > 3600) "%d:%02d:%02d".format(this / 3600, (this % 3600) / 60, this % 60)
-        else "%02d:%02d".format(this / 60, this % 60)
+        if (this > 3600)
+            "%d:%02d:%02d".format(Locale.US, this / 3600, (this % 3600) / 60, this % 60)
+        else "%02d:%02d".format(Locale.US, this / 60, this % 60)
     }
 
 fun String.isNumberInRange(start: Int, end: Int): Boolean {
@@ -100,9 +103,9 @@ fun Number?.toBitrateText(): String {
     val br = this?.toFloat() ?: return ""
     return when {
         br <= 0f -> "" // i don't care
-        br < 1024f -> "%.1f Kbps".format(br)
+        br < 1024f -> "%.1f Kbps".format(Locale.US, br)
 
-        else -> "%.2f Mbps".format(br / 1024f)
+        else -> "%.2f Mbps".format(Locale.US, br / 1024f)
     }
 }
 

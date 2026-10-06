@@ -419,7 +419,7 @@ fun ListItemStateText(
                 is Running -> {
                     val progress = downloadState.progress
                     if (progress >= 0) {
-                        "%.1f %%".format(downloadState.progress * 100)
+                        "%.1f %%".format(java.util.Locale.US, downloadState.progress * 100)
                     } else {
                         stringResource(R.string.status_downloading)
                     }

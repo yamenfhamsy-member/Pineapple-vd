@@ -208,6 +208,8 @@
     <string name="invalid_input">Invalid input</string>
     <string name="lowest_quality">Lowest quality</string>
     <string name="download_queue">Download queue</string>
+    <string name="quick_input_hint">Paste video link here…</string>
+    <string name="quick_input_download">Fetch video</string>
     <string name="unavailable">Unavailable</string>
     <string name="format_settings_desc">File format, video quality, subtitles</string>
     <string name="general_settings_desc">Yt-dlp version, notification, playlist</string>

@@ -57,6 +57,28 @@ fun SealTheme(
         }
     }
 
+private val BotanicalBlack = Color(0xFF0B120E)
+private val BotanicalLowest = Color(0xFF060A08)
+private val BotanicalContainer = Color(0xFF101713)
+private val BotanicalHigh = Color(0xFF151D18)
+private val BotanicalHighest = Color(0xFF1B241E)
+
+private val ElectricYellow = Color(0xFFF5A623)
+private val OnElectricYellow = Color(0xFF1F1400)
+private val ElectricYellowContainerDark = Color(0xFF6B4300)
+private val OnElectricYellowContainerDark = Color(0xFFFFE0AE)
+private val ElectricYellowLight = Color(0xFF7A5200)
+private val ElectricYellowContainerLight = Color(0xFFFFDDB5)
+private val OnElectricYellowContainerLight = Color(0xFF291800)
+
+private val LeafAccentDark = Color(0xFF93D89A)
+private val OnLeafAccentDark = Color(0xFF0B2512)
+private val LeafContainerDark = Color(0xFF1C4E28)
+private val OnLeafContainerDark = Color(0xFFB9F0BE)
+private val LeafAccentLight = Color(0xFF2E6B34)
+private val LeafContainerLight = Color(0xFFB2F1B8)
+private val OnLeafContainerLight = Color(0xFF07270F)
+
     val colorScheme =
         dynamicColorScheme(!darkTheme).run {
             if (isHighContrastModeEnabled && darkTheme)
@@ -69,7 +91,37 @@ fun SealTheme(
                     surfaceContainerHigh = surfaceContainerLow,
                     surfaceContainerHighest = surfaceContainer,
                 )
-            else this
+            else if (darkTheme)
+                copy(
+                    primary = ElectricYellow,
+                    onPrimary = OnElectricYellow,
+                    primaryContainer = ElectricYellowContainerDark,
+                    onPrimaryContainer = OnElectricYellowContainerDark,
+                    tertiary = LeafAccentDark,
+                    onTertiary = OnLeafAccentDark,
+                    tertiaryContainer = LeafContainerDark,
+                    onTertiaryContainer = OnLeafContainerDark,
+                    surface = BotanicalBlack,
+                    background = BotanicalBlack,
+                    surfaceDim = BotanicalBlack,
+                    surfaceContainerLowest = BotanicalLowest,
+                    surfaceContainerLow = BotanicalBlack,
+                    surfaceContainer = BotanicalContainer,
+                    surfaceContainerHigh = BotanicalHigh,
+                    surfaceContainerHighest = BotanicalHighest,
+                    surfaceVariant = BotanicalContainer,
+                )
+            else
+                copy(
+                    primary = ElectricYellowLight,
+                    onPrimary = Color.White,
+                    primaryContainer = ElectricYellowContainerLight,
+                    onPrimaryContainer = OnElectricYellowContainerLight,
+                    tertiary = LeafAccentLight,
+                    onTertiary = Color.White,
+                    tertiaryContainer = LeafContainerLight,
+                    onTertiaryContainer = OnLeafContainerLight,
+                )
         }
 
     val textStyle =
