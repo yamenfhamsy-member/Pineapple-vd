@@ -12,8 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.unit.dp
 
-private const val ThreeJsSourceUrl =
-    "https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.min.js"
+private const val ThreeJsAssetPath = "file:///android_asset/three.min.js"
 
 private val PineappleHeroScript =
     """
@@ -23,23 +22,27 @@ private val PineappleHeroScript =
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-html,body{margin:0;padding:0;background:transparent;overflow:hidden;}
-#threejs-container{width:100%;height:100%;}
+html{width:100%;height:100%;margin:0;padding:0;background:transparent;overflow:hidden;}
+body{width:100%;height:100%;margin:0;padding:0;background:transparent;overflow:hidden;}
+#threejs-container{width:100%;height:100%;background:transparent;}
+canvas{display:block;}
 </style>
 </head>
 <body>
 <div id="threejs-container"></div>
-<script src="$ThreeJsSourceUrl"></script>
+<script src="$ThreeJsAssetPath"></script>
 <script>
 (function () {
+  if (typeof THREE === 'undefined') { document.body.style.background = '#332200'; return; }
   var container = document.getElementById('threejs-container');
-  var width = container.clientWidth || 400;
-  var height = container.clientHeight || 300;
+  var width = window.innerWidth || container.offsetWidth || 400;
+  var height = window.innerHeight || container.offsetHeight || 300;
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
   var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
   container.appendChild(renderer.domElement);
 
   var group = new THREE.Group();
@@ -170,11 +173,14 @@ fun PineappleHero3D(modifier: Modifier = Modifier, height: Int = 240) {
                 setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = false
+                settings.allowFileAccess = true
+                settings.allowContentAccess = true
+                settings.mediaPlaybackRequiresUserGesture = false
                 isVerticalScrollBarEnabled = false
                 isHorizontalScrollBarEnabled = false
                 webViewClient = WebViewClient()
                 loadDataWithBaseURL(
-                    "https://localhost/",
+                    "file:///android_asset/",
                     PineappleHeroScript,
                     "text/html",
                     "utf-8",

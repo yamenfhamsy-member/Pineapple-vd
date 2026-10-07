@@ -36,6 +36,7 @@ const val CONCURRENT = "concurrent_fragments"
 const val EXTRACT_AUDIO = "extract_audio"
 const val THUMBNAIL = "create_thumbnail"
 const val YT_DLP_VERSION = "yt-dlp_init"
+const val STALE_YT_DLP_CLEANED = "yt-dlp_stale_cleaned"
 const val YT_DLP_AUTO_UPDATE = "yt-dlp_update"
 const val DEBUG = "debug"
 const val CONFIGURE = "configure"
@@ -211,7 +212,7 @@ private val BooleanPreferenceDefaults =
         FORMAT_SELECTION to true,
         CONFIGURE to true,
         CELLULAR_DOWNLOAD to false,
-        YT_DLP_AUTO_UPDATE to true,
+        YT_DLP_AUTO_UPDATE to false,
         NOTIFICATION to true,
         EMBED_METADATA to true,
         USE_CUSTOM_AUDIO_PRESET to false,

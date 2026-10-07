@@ -457,25 +457,11 @@ fun FormatPage(
     state: SelectionState.FormatSelection,
     onDismissRequest: () -> Unit,
 ) {
-    val sheetState =
-        androidx.compose.material.rememberModalBottomSheetState(
-            initialValue = ModalBottomSheetValue.Hidden,
-            skipHalfExpanded = true,
-        )
-
-    LaunchedEffect(state) { sheetState.show() }
-    val scope = rememberCoroutineScope()
-    BackHandler { scope.launch { sheetState.hide() }.invokeOnCompletion { onDismissRequest() } }
-
-    SealModalBottomSheetM2Variant(sheetState = sheetState, sheetGesturesEnabled = false) {
-        FormatPage(
-            modifier = modifier,
-            videoInfo = state.info,
-            onNavigateBack = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion { onDismissRequest() }
-            },
-        )
-    }
+    PineFormatPage(
+        modifier = modifier,
+        videoInfo = state.info,
+        onNavigateBack = onDismissRequest,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

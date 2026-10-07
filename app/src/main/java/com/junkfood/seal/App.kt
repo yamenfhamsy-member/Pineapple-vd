@@ -34,6 +34,7 @@ import com.junkfood.seal.util.NotificationUtil
 import com.junkfood.seal.util.PreferenceUtil
 import com.junkfood.seal.util.PreferenceUtil.getString
 import com.junkfood.seal.util.PreferenceUtil.updateString
+import com.junkfood.seal.util.STALE_YT_DLP_CLEANED
 import com.junkfood.seal.util.SDCARD_URI
 import com.junkfood.seal.util.UpdateUtil
 import com.junkfood.seal.util.VIDEO_DIRECTORY
@@ -88,6 +89,12 @@ class App : Application() {
 
         applicationScope.launch((Dispatchers.IO)) {
             try {
+                if (!PreferenceUtil.containsKey(STALE_YT_DLP_CLEANED)) {
+                    listOf("yt-dlp_linux", "yt-dlp_linux.zip", "ffmpeg", "ffmpeg.zip", "aria2c", "aria2c.zip").forEach {
+                        runCatching { File(filesDir, it).delete() }
+                    }
+                    PreferenceUtil.encodeString(STALE_YT_DLP_CLEANED, "1")
+                }
                 YoutubeDL.init(this@App)
                 FFmpeg.init(this@App)
                 Aria2c.init(this@App)
