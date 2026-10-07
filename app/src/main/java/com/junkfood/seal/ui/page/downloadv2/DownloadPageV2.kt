@@ -286,9 +286,9 @@ fun DownloadPageV2(
     }
     when (selectionState) {
         is DownloadDialogViewModel.SelectionState.FormatSelection ->
-            FormatPage(
-                state = selectionState,
-                onDismissRequest = { dialogViewModel.postAction(Action.Reset) },
+            PineFormatPage(
+                videoInfo = selectionState.info,
+                onNavigateBack = { dialogViewModel.postAction(Action.Reset) },
             )
 
         is DownloadDialogViewModel.SelectionState.PlaylistSelection -> {

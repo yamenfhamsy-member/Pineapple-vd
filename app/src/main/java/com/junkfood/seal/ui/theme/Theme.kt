@@ -33,27 +33,25 @@ fun Color.harmonizeWith(other: Color) =
 fun Color.harmonizeWithPrimary(): Color =
     this.harmonizeWith(other = MaterialTheme.colorScheme.primary)
 
-private val BotanicalBlack = Color(0xFF0B120E)
-private val BotanicalLowest = Color(0xFF060A08)
-private val BotanicalContainer = Color(0xFF101713)
-private val BotanicalHigh = Color(0xFF151D18)
-private val BotanicalHighest = Color(0xFF1B241E)
+private val PineGold = Color(0xFFFFD700)
+private val OnPineGold = Color(0xFF1A1400)
+private val PineGoldContainerDark = Color(0xFF4A3A00)
+private val OnPineGoldContainerDark = Color(0xFFFFE97A)
+private val PineGreen = Color(0xFF32CD32)
+private val OnPineGreen = Color(0xFF04220A)
+private val PineGreenContainerDark = Color(0xFF1B5B23)
+private val OnPineGreenContainerDark = Color(0xFF9CF2A4)
+private val PineGreenLight = Color(0xFF1E7A24)
+private val PineGoldLight = Color(0xFF6B5400)
+private val PineGoldContainerLight = Color(0xFFFFF0A8)
+private val OnPineGoldContainerLight = Color(0xFF241C00)
 
-private val ElectricYellow = Color(0xFFF5A623)
-private val OnElectricYellow = Color(0xFF1F1400)
-private val ElectricYellowContainerDark = Color(0xFF6B4300)
-private val OnElectricYellowContainerDark = Color(0xFFFFE0AE)
-private val ElectricYellowLight = Color(0xFF7A5200)
-private val ElectricYellowContainerLight = Color(0xFFFFDDB5)
-private val OnElectricYellowContainerLight = Color(0xFF291800)
-
-private val LeafAccentDark = Color(0xFF93D89A)
-private val OnLeafAccentDark = Color(0xFF0B2512)
-private val LeafContainerDark = Color(0xFF1C4E28)
-private val OnLeafContainerDark = Color(0xFFB9F0BE)
-private val LeafAccentLight = Color(0xFF2E6B34)
-private val LeafContainerLight = Color(0xFFB2F1B8)
-private val OnLeafContainerLight = Color(0xFF07270F)
+private val PineBase = Color(0xFF121212)
+private val PineElevated = Color(0xFF1A1A1A)
+private val PineCard = Color(0xFF1E1E1E)
+private val PineCardHigh = Color(0xFF242424)
+private val PineCardHighest = Color(0xFF2C2C2C)
+private val PineOutermost = Color(0xFF0C0C0C)
 
 @Composable
 fun SealTheme(
@@ -93,34 +91,42 @@ fun SealTheme(
                 )
             else if (darkTheme)
                 copy(
-                    primary = ElectricYellow,
-                    onPrimary = OnElectricYellow,
-                    primaryContainer = ElectricYellowContainerDark,
-                    onPrimaryContainer = OnElectricYellowContainerDark,
-                    tertiary = LeafAccentDark,
-                    onTertiary = OnLeafAccentDark,
-                    tertiaryContainer = LeafContainerDark,
-                    onTertiaryContainer = OnLeafContainerDark,
-                    surface = BotanicalBlack,
-                    background = BotanicalBlack,
-                    surfaceDim = BotanicalBlack,
-                    surfaceContainerLowest = BotanicalLowest,
-                    surfaceContainerLow = BotanicalBlack,
-                    surfaceContainer = BotanicalContainer,
-                    surfaceContainerHigh = BotanicalHigh,
-                    surfaceContainerHighest = BotanicalHighest,
-                    surfaceVariant = BotanicalContainer,
+                    primary = PineGold,
+                    onPrimary = OnPineGold,
+                    primaryContainer = PineGoldContainerDark,
+                    onPrimaryContainer = OnPineGoldContainerDark,
+                    secondary = PineGreen,
+                    onSecondary = OnPineGreen,
+                    secondaryContainer = PineGreenContainerDark,
+                    onSecondaryContainer = OnPineGreenContainerDark,
+                    tertiary = PineGreen,
+                    onTertiary = OnPineGreen,
+                    tertiaryContainer = PineGreenContainerDark,
+                    onTertiaryContainer = OnPineGreenContainerDark,
+                    surface = PineBase,
+                    background = PineBase,
+                    surfaceDim = PineBase,
+                    surfaceContainerLowest = PineOutermost,
+                    surfaceContainerLow = PineBase,
+                    surfaceContainer = PineCard,
+                    surfaceContainerHigh = PineCardHigh,
+                    surfaceContainerHighest = PineCardHighest,
+                    surfaceVariant = PineElevated,
+                    outline = Color(0xFF8A8A8A),
+                    outlineVariant = Color(0xFF3A3A3A),
+                    onSurface = Color.White,
+                    onSurfaceVariant = Color(0xFFB0B0B0),
                 )
             else
                 copy(
-                    primary = ElectricYellowLight,
+                    primary = PineGoldLight,
                     onPrimary = Color.White,
-                    primaryContainer = ElectricYellowContainerLight,
-                    onPrimaryContainer = OnElectricYellowContainerLight,
-                    tertiary = LeafAccentLight,
+                    primaryContainer = PineGoldContainerLight,
+                    onPrimaryContainer = OnPineGoldContainerLight,
+                    secondary = PineGreenLight,
+                    onSecondary = Color.White,
+                    tertiary = PineGreenLight,
                     onTertiary = Color.White,
-                    tertiaryContainer = LeafContainerLight,
-                    onTertiaryContainer = OnLeafContainerLight,
                 )
         }
 
