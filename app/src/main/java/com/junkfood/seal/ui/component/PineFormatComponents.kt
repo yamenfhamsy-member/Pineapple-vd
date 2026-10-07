@@ -184,10 +184,7 @@ private fun PineRadioDot(selected: Boolean, accent: Color) {
         contentAlignment = Alignment.Center,
     ) {
         if (selected) {
-            Box(
-                modifier = Modifier.size(6.dp).clip(CircleShape).background(PineBase),
-                contentAlignment = Alignment.Center,
-            )
+            Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(PineBase)) {}
         }
     }
 }
